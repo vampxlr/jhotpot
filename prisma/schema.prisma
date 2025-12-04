@@ -1,0 +1,208 @@
+// Prisma Schema for Restaurant App
+// Works with SQLite (dev) and Postgres (prod)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER MODELS
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // For email/password auth
+  phone         String?
+  phoneVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  addresses     Address[]
+  orders        Order[]
+  quoteRequests QuoteRequest[]
+  otps          OTP[]
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  label       String   // Home, Office, etc.
+  street      String
+  area        String
+  city        String
+  postalCode  String?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@index([userId])
+}
+
+// ============================================
+// ADMIN MODELS
+// ============================================
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   // "ADMIN" or "SUPER_ADMIN"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// MENU MODELS
+// ============================================
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  image       String?
+  category    String   // Biryani, Curry, Snacks, Desserts, etc.
+  isVeg       Boolean  @default(false)
+  isSpicy     Boolean  @default(false)
+  isPopular   Boolean  @default(false)
+  isAvailable Boolean  @default(true)
+  section     String   @default("restaurant") // restaurant, lunchloop, catering
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems OrderItem[]
+
+  @@index([section])
+  @@index([category])
+}
+
+// ============================================
+// ORDER MODELS
+// ============================================
+
+model Order {
+  id              String   @id @default(cuid())
+  userId          String
+  addressId       String
+  customerName    String
+  customerPhone   String
+  customerEmail   String
+  subtotal        Float
+  deliveryCharge  Float
+  total           Float
+  paymentMethod   String   @default("COD")
+  status          String   @default("NEW") // NEW, PREPARING, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
+  specialNotes    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user    User        @relation(fields: [userId], references: [id])
+  address Address     @relation(fields: [addressId], references: [id])
+  items   OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id         String @id @default(cuid())
+  orderId    String
+  menuItemId String
+  name       String
+  price      Float
+  quantity   Int
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+
+  @@index([orderId])
+}
+
+// ============================================
+// QUOTE REQUEST MODELS
+// ============================================
+
+model QuoteRequest {
+  id        String   @id @default(cuid())
+  userId    String?
+  type      String   // "LUNCH_LOOP" or "CATERING_HUB"
+  status    String   @default("NEW") // NEW, CONTACTED, FINALIZED, LOST
+
+  // Common fields
+  name          String
+  email         String
+  phone         String
+  numberOfPeople Int
+  date          DateTime
+  budget        Float?
+  preferences   String?
+  notes         String?
+
+  // Lunch Loop specific
+  companyName   String?
+
+  // Catering Hub specific
+  eventType     String?
+  venue         String?
+
+  // Items selected (JSON)
+  selectedItems String?  // JSON string of cart items
+
+  adminNotes    String?
+  assignedTo    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+}
+
+// ============================================
+// OTP MODEL (For future email/phone verification)
+// ============================================
+
+model OTP {
+  id        String   @id @default(cuid())
+  userId    String
+  code      String
+  type      String   // "EMAIL" or "PHONE"
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ============================================
+// SETTINGS MODEL
+// ============================================
+
+model Settings {
+  id             String   @id @default(cuid())
+  key            String   @unique
+  value          String
+  updatedAt      DateTime @updatedAt
+
+  @@index([key])
+}
+

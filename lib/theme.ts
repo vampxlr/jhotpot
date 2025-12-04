@@ -1,0 +1,98 @@
+export type Theme = 'dark' | 'light' | 'green' | 'crimson';
+
+export const themes = {
+  dark: {
+    background: '222 47% 11%',
+    foreground: '210 40% 98%',
+    card: '222 47% 11%',
+    'card-foreground': '210 40% 98%',
+    popover: '222 47% 11%',
+    'popover-foreground': '210 40% 98%',
+    primary: '217 91% 60%',
+    'primary-foreground': '222 47% 11%',
+    secondary: '217 33% 17%',
+    'secondary-foreground': '210 40% 98%',
+    muted: '223 47% 11%',
+    'muted-foreground': '215 20% 65%',
+    accent: '216 34% 17%',
+    'accent-foreground': '210 40% 98%',
+    destructive: '0 63% 31%',
+    'destructive-foreground': '210 40% 98%',
+    border: '216 34% 17%',
+    input: '216 34% 17%',
+    ring: '224 76% 48%',
+  },
+  light: {
+    background: '0 0% 100%',
+    foreground: '222 47% 11%',
+    card: '0 0% 100%',
+    'card-foreground': '222 47% 11%',
+    popover: '0 0% 100%',
+    'popover-foreground': '222 47% 11%',
+    primary: '221 83% 53%',
+    'primary-foreground': '210 40% 98%',
+    secondary: '210 40% 96%',
+    'secondary-foreground': '222 47% 11%',
+    muted: '210 40% 96%',
+    'muted-foreground': '215 16% 47%',
+    accent: '210 40% 96%',
+    'accent-foreground': '222 47% 11%',
+    destructive: '0 84% 60%',
+    'destructive-foreground': '210 40% 98%',
+    border: '214 32% 91%',
+    input: '214 32% 91%',
+    ring: '221 83% 53%',
+  },
+  green: {
+    background: '160 70% 7%',
+    foreground: '160 10% 98%',
+    card: '160 50% 10%',
+    'card-foreground': '160 10% 98%',
+    popover: '160 50% 10%',
+    'popover-foreground': '160 10% 98%',
+    primary: '142 76% 36%',
+    'primary-foreground': '160 10% 98%',
+    secondary: '160 30% 15%',
+    'secondary-foreground': '160 10% 98%',
+    muted: '160 30% 15%',
+    'muted-foreground': '160 10% 65%',
+    accent: '142 76% 36%',
+    'accent-foreground': '160 10% 98%',
+    destructive: '0 63% 31%',
+    'destructive-foreground': '160 10% 98%',
+    border: '160 30% 18%',
+    input: '160 30% 18%',
+    ring: '142 76% 36%',
+  },
+  crimson: {
+    background: '345 60% 8%',
+    foreground: '345 10% 98%',
+    card: '345 50% 12%',
+    'card-foreground': '345 10% 98%',
+    popover: '345 50% 12%',
+    'popover-foreground': '345 10% 98%',
+    primary: '348 83% 47%',
+    'primary-foreground': '345 10% 98%',
+    secondary: '345 30% 17%',
+    'secondary-foreground': '345 10% 98%',
+    muted: '345 30% 17%',
+    'muted-foreground': '345 10% 65%',
+    accent: '348 83% 47%',
+    'accent-foreground': '345 10% 98%',
+    destructive: '0 84% 60%',
+    'destructive-foreground': '345 10% 98%',
+    border: '345 30% 20%',
+    input: '345 30% 20%',
+    ring: '348 83% 47%',
+  },
+};
+
+export function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  const themeColors = themes[theme];
+
+  Object.entries(themeColors).forEach(([key, value]) => {
+    root.style.setProperty(`--${key}`, value);
+  });
+}
+
