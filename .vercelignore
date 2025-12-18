@@ -1,0 +1,7 @@
+# Files to ignore during Vercel deployment
+prisma/*.db
+prisma/*.db-journal
+.env.local
+.env*.local
+*.log
+

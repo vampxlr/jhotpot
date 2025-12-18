@@ -188,28 +188,37 @@ Carts persist in localStorage and sync with server after login.
 
 ## 🚢 Deployment
 
-### Database Migration (Development → Production)
+### Quick Deploy to Vercel (5 Minutes) ⚡
 
-The app uses SQLite for development. For production:
+**[→ See QUICK_DEPLOY.md](./QUICK_DEPLOY.md) for fastest setup**
 
-1. **Update `.env` with PostgreSQL URL:**
-```env
-DATABASE_URL="postgresql://user:password@host:5432/dbname"
-```
+### Detailed Deployment Guide
 
-2. **Run migration:**
-```bash
-npx prisma migrate dev --name init
-npx prisma generate
-npm run db:seed
-```
+**[→ See DEPLOYMENT.md](./DEPLOYMENT.md) for step-by-step instructions**
 
-No code changes needed - Prisma handles the database switch automatically!
+### Quick Summary
+
+1. **Get PostgreSQL Database** (Neon, Supabase, or Vercel Postgres)
+2. **Push to GitHub**
+3. **Deploy to Vercel** from [vercel.com/new](https://vercel.com/new)
+4. **Add Environment Variables**:
+   - `DATABASE_URL` - Your PostgreSQL connection string
+   - `NEXTAUTH_URL` - Your Vercel URL
+   - `NEXTAUTH_SECRET` - Generate with `openssl rand -base64 32`
+5. **Redeploy** - Migrations run automatically during build
+6. **Seed Database** - Via Vercel CLI: `npm run db:seed`
 
 ### Recommended Hosting
 
-- **Frontend**: Vercel, Netlify, Railway
-- **Database**: Neon, Supabase, Railway PostgreSQL
+- **App**: Vercel (recommended), Netlify, Railway
+- **Database**: Neon (free), Supabase (free), Vercel Postgres, Railway
+
+### Health Check
+
+After deployment, visit `/api/health` to verify:
+- Database connection status
+- App health status
+- Environment information
 
 ## 🛠️ Development Scripts
 
@@ -246,6 +255,15 @@ npm run db:studio    # Open Prisma Studio (database GUI)
 - [ ] Push notifications
 - [ ] Multi-language support (Bengali/English)
 
+## 📋 Deployment Documentation
+
+- **[VERCEL_README.md](./VERCEL_README.md)** - Quick deployment summary
+- **[QUICK_DEPLOY.md](./QUICK_DEPLOY.md)** - 5-minute deployment guide
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Comprehensive deployment guide
+- **[ENV_SETUP.md](./ENV_SETUP.md)** - Environment variables guide
+- **[MIGRATIONS.md](./MIGRATIONS.md)** - Database migrations guide
+- **[VERCEL_CHECKLIST.md](./VERCEL_CHECKLIST.md)** - Deployment checklist
+
 ## 📝 License
 
 This project is created for educational purposes.
@@ -257,4 +275,12 @@ Feel free to submit issues and enhancement requests!
 ---
 
 **Built with ❤️ for the Bangladeshi food community**
+
+---
+
+## 🚀 Deployment Status
+
+✅ **Vercel Ready** - This project is fully configured for Vercel deployment!
+
+Run `npm run check-deploy` to verify deployment readiness.
 
